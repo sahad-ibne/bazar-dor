@@ -12,6 +12,7 @@ import {
     Card
 } from '@heroui/react'
 import { authClient } from '@/lib/auth-client'
+import Link from 'next/link'
 
 const SignUpPage = () => {
   const router = useRouter()
@@ -30,16 +31,10 @@ const SignUpPage = () => {
         password: data.password,
         callbackURL: "/"
     });
-
-    
-    if (!error) {
-      router.push("/");
-    }
   }
 
   return (
     <div className="min-h-screen bg-[#f3f6f3] flex flex-col items-center justify-center p-4">
-      {/* Header section matching Figma */}
       <div className="flex flex-col items-center gap-1 text-center pb-6">
         <h1 className="text-2xl font-bold text-gray-900">অ্যাকাউন্ট তৈরি করুন</h1>
         <p className="text-xs text-gray-500">বিনা খরচে সাইন আপ করে সব বিস্তারিত দাম দেখুন।</p>
@@ -116,7 +111,7 @@ const SignUpPage = () => {
           </TextField>
 
           <div className='flex flex-col gap-2 mt-4'>
-            <Button 
+           <Button 
               type='submit'
               className="w-full bg-[#008a4b] hover:bg-[#00753f] text-white font-medium text-base rounded-md py-6"
             >

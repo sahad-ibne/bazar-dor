@@ -31,7 +31,7 @@ const SignInPage = () => {
 
   return (
     <div className="min-h-screen bg-[#f3f6f3] flex flex-col items-center justify-center p-4">
-      {/* Header section matching Figma */}
+
       <div className="flex flex-col items-center gap-1 text-center pb-6">
         <h1 className="text-2xl font-bold text-gray-900">সাইন ইন</h1>
         <p className="text-xs text-gray-500">বিস্তারিত দাম, বাজার তুলনা ও প্রোফাইল দেখতে অ্যাকাউন্টে ঢুকুন।</p>
@@ -91,5 +91,4 @@ const SignInPage = () => {
     </div>
   )
 }
-
 export default SignInPage
