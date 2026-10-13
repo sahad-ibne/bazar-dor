@@ -109,7 +109,7 @@ export default function NavBar () {
             )}
           </div>
         </header>
-
+<div className="border-b border-gray-100 w-full my-2" />
        <div className='flex items-center gap-4 pb-3 overflow-x-auto scrollbar-hide'>
           {categories.map(cat => {
             const categorySlug = cat.slug || cat.id;
