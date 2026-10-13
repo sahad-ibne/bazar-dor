@@ -1,7 +1,9 @@
+
 import baseUrl from '@/bazar/baseUrl'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import Image from 'next/image'
+import toast from 'react-hot-toast';
 
 const toBengaliNumber = (num) => {
   if (num === undefined || num === null) return '';

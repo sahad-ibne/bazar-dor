@@ -4,6 +4,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 import {
   Button,
   FieldError,
@@ -54,23 +55,44 @@ const SignInContent = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
 
-  const onSubmit = async e => {
-    e.preventDefault()
+const onSubmit = async e => {
+  e.preventDefault()
 
-    const formData = new FormData(e.currentTarget)
-    const data = {}
+  const formData = new FormData(e.currentTarget)
+  const data = {}
 
-    formData.forEach((value, key) => {
-      data[key] = value.toString()
-    })
+  formData.forEach((value, key) => {
+    data[key] = value.toString()
+  })
 
-    const { error } = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-      rememberMe: true,
-      callbackURL: callbackUrl
-    })
+  const loadingToast = toast.loading('সাইন ইন হচ্ছে...')
+
+  try {
+    const { data: signInData, error } =
+      await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        rememberMe: true,
+        callbackURL: callbackUrl
+      })
+
+    if (error) {
+      toast.dismiss(loadingToast)
+      toast.error(
+        error.message || 'সাইন ইন ব্যর্থ হয়েছে!',
+        { id: 'signin-error' }
+      )
+      return
+    }
+
+    toast.dismiss(loadingToast)
+    toast.success('সফলভাবে সাইন ইন হয়েছে!')
+  } catch (err) {
+    toast.dismiss(loadingToast)
+    toast.error('একটি সমস্যা হয়েছে। আবার চেষ্টা করুন!')
+    console.error('Sign-in error:', err)
   }
+}
 
   const GsignIn = async () => {
     const { error } = await authClient.signIn.social({

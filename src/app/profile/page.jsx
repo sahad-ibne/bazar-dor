@@ -5,6 +5,11 @@ import { Card, Button, Input, Label } from '@heroui/react'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
 
+
+
+import toast from 'react-hot-toast'
+
+
 const ProfileLoading = () => (
   <div className="min-h-screen bg-[#f3f6f3] py-12 px-6 flex items-center justify-center">
     <div className="bg-white p-8 rounded-3xl border border-gray-100 max-w-md w-full animate-pulse space-y-6 shadow-sm">
@@ -53,14 +58,19 @@ const ProfilePage = () => {
   const userInitial = session.user.name
     ? session.user.name.charAt(0).toUpperCase()
     : 'U'
-  const handleSignOut = async () => {
-    await authClient.signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          router.replace('/sign-in')
+ const handleSignOut = async () => {
+    try {
+      await authClient.signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success('সফলভাবে সাইন আউট করা হয়েছে!')
+            router.replace('/sign-in')
+          },
         },
-      },
-    })
+      })
+    } catch (error) {
+      toast.error('সাইন আউট করা যায়নি। আবার চেষ্টা করুন।')
+    }
   }
   const handleUpdate = async (e) => {
     e.preventDefault()
