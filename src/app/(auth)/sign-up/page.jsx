@@ -175,7 +175,7 @@ const SignUpPage = () => {
           </div>
         </Form>
       </Card>
-      <Link href='/' className='mt-6 text-xs text-gray-500 hover:text-gray-700'>
+      <Link href='/sign-in' className='mt-6 text-xs text-gray-500 hover:text-gray-700'>
         ← হোম পেজে ফিরে যান
       </Link>
     </div>
