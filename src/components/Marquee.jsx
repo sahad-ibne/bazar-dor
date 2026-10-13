@@ -1,5 +1,8 @@
-import React, { Suspense } from 'react'
+'use client'
+
+import { useEffect, useState } from 'react'
 import MarqueeText from 'react-marquee-text'
+import baseUrl from '@/bazar/baseUrl'
 import 'react-marquee-text/dist/styles.css'
 
 const toBengaliNumber = num => {
@@ -21,22 +24,42 @@ const getBengaliUnit = unit => {
   if (u === 'gm' || u === 'gram' || u === 'গ্রাম') return 'গ্রাম'
   return unit
 }
-const MarqueeContent = async () => {
-  let products = [];
+const Marquee = () => {
+  const [products, setProducts] = useState(null)
 
-  try {
-    const res = await fetch(
-      'https://openapi.programming-hero.com/api/bazardor/products'
-    );
+  useEffect(() => {
+    const controller = new AbortController()
 
-    if (res.ok) {
-      products = await res.json();
+    const loadProducts = async () => {
+      try {
+        const res = await fetch(`${baseUrl}/products`, {
+          signal: controller.signal
+        })
+        if (!res.ok) {
+          throw new Error(`Marquee request failed with status ${res.status}`)
+        }
+
+        const data = await res.json()
+        if (!Array.isArray(data)) {
+          throw new Error('Marquee API returned an invalid products response')
+        }
+        setProducts(data)
+      } catch (error) {
+        if (controller.signal.aborted) return
+        console.error('Marquee fetch error:', error)
+        setProducts([])
+      }
     }
-  } catch (error) {
-    console.error('Marquee fetch error:', error);
+
+    loadProducts()
+    return () => controller.abort()
+  }, [])
+
+  if (products === null) {
+    return <div className='w-full h-10 bg-[#f8faf8]' />
   }
 
-    return (
+  return (
     <div className='w-full bg-[#f8faf8] border-y border-gray-100 py-2.5 overflow-hidden text-xs'>
       <MarqueeText
         duration={10}
@@ -45,51 +68,43 @@ const MarqueeContent = async () => {
         playOnlyInView={false}
       >
         <div className='flex items-center gap-6 pr-6'>
-          {Array.isArray(products) &&
-            products.map(product => {
-              const isUp = product?.change?.dir === 'up'
-              const isDown = product?.change?.dir === 'down'
-              const changeColor = isUp
-                ? 'text-red-500'
-                : isDown
-                ? 'text-green-600'
-                : 'text-gray-500'
-              const changeSign = isUp ? '▲' : isDown ? '▼' : '—'
-              const changePct = toBengaliNumber(product?.change?.pct ?? 0)
-              const unitBn = getBengaliUnit(product.unit)
+          {products.map(product => {
+            const isUp = product?.change?.dir === 'up'
+            const isDown = product?.change?.dir === 'down'
+            const changeColor = isUp
+              ? 'text-red-500'
+              : isDown
+              ? 'text-green-600'
+              : 'text-gray-500'
+            const changeSign = isUp ? '▲' : isDown ? '▼' : '—'
+            const changePct = toBengaliNumber(product?.change?.pct ?? 0)
+            const unitBn = getBengaliUnit(product.unit)
 
-              return (
-                <div
-                  key={product.id}
-                  className='flex items-center gap-2 whitespace-nowrap font-medium text-gray-800 border-r border-gray-200/60 pr-6'
+            return (
+              <div
+                key={product.id}
+                className='flex items-center gap-2 whitespace-nowrap font-medium text-gray-800 border-r border-gray-200/60 pr-6'
+              >
+                <span className='text-sm'>{product.image || '🛒'}</span>
+                <span className='font-bold text-gray-900'>
+                  {product.nameBn}
+                </span>
+                <span className='text-gray-600'>
+                  {toBengaliNumber(product.today)} টাকা/{unitBn}
+                </span>
+                <span
+                  className={`flex items-center gap-0.5 font-semibold ${changeColor}`}
                 >
-                  <span className='text-sm'>{product.image || '🛒'}</span>
-                  <span className='font-bold text-gray-900'>
-                    {product.nameBn}
-                  </span>
-                  <span className='text-gray-600'>
-                    {toBengaliNumber(product.today)} টাকা/{unitBn}
-                  </span>
-                  <span
-                    className={`flex items-center gap-0.5 font-semibold ${changeColor}`}
-                  >
-                    <span>{changeSign}</span>
-                    <span>{changePct}%</span>
-                  </span>
-                </div>
-              )
-            })}
+                  <span>{changeSign}</span>
+                  <span>{changePct}%</span>
+                </span>
+              </div>
+            )
+          })}
         </div>
       </MarqueeText>
     </div>
   )
-};
+}
 
-const Marquee = () => (
-  <Suspense
-   fallback={<div className="w-full h-10 bg-[#f8faf8]" />}>
-    <MarqueeContent />
-  </Suspense>
-);
-
-export default Marquee;
+export default Marquee
