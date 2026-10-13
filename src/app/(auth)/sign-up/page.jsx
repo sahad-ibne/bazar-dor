@@ -27,12 +27,18 @@ const SignUpPage = () => {
       data[key] = value.toString()
     })
 
+    if (data.password !== data.confirmPassword) return
+
     const { data: signUpData, error } = await authClient.signUp.email({
       name: data.name,
       email: data.email,
       password: data.password,
       callbackURL: '/'
     })
+
+    if (!error && signUpData) {
+      router.push('/')
+    }
   }
 
   const GsignIn = async () => {

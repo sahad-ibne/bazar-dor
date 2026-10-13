@@ -33,7 +33,6 @@ export default async function HomeContent () {
   return (
     <div className='min-h-screen bg-[#f3f6f3] py-8'>
       <div className='max-w-5xl mx-auto px-6 flex flex-col gap-8'>
-        {/* Top Hero Banner */}
         <div className='bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden'>
           <div className='flex flex-col gap-3 max-w-lg'>
             <div className='inline-flex items-center gap-2 bg-[#f0fdf4] px-3 py-1 rounded-full w-max text-xs font-semibold text-[#008a4b]'>
@@ -65,8 +64,6 @@ export default async function HomeContent () {
             />
           </div>
         </div>
-
-        {/* Aaj Dam Bereche Section */}
         {increasedProducts.length > 0 && (
           <div className='flex flex-col gap-4'>
             <div className='flex items-center gap-2'>
@@ -119,8 +116,6 @@ export default async function HomeContent () {
             </div>
           </div>
         )}
-
-        {/* Aaj Dam Komeche Section */}
         {decreasedProducts.length > 0 && (
           <div className='flex flex-col gap-4'>
             <div className='flex items-center gap-2'>
@@ -134,7 +129,7 @@ export default async function HomeContent () {
                 const changePct = toBengaliNumber(product?.change?.pct ?? 0)
                 return (
                   <Link 
-                    href={`/product/${product.slug || product.id}`} 
+                    href={`/product/${product.slug || product.id}`}
                     key={product.id}
                     className="h-full"
                   >
@@ -173,8 +168,6 @@ export default async function HomeContent () {
             </div>
           </div>
         )}
-
-        {/* All Products Section with id="all-products" */}
         <div id='all-products' className='flex flex-col gap-4 scroll-mt-24'>
           <div>
             <h2 className='text-base font-bold text-gray-900'>সব পণ্য</h2>
@@ -197,7 +190,7 @@ export default async function HomeContent () {
 
                 return (
                   <Link 
-                    href={`/product/${product.slug || product.id}`} 
+                  href={`/product/${product.slug || product.id}`}
                     key={product.id}
                     className="h-full"
                   >

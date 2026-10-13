@@ -1,11 +1,11 @@
 'use client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import {
   Button,
-  Description,
   FieldError,
   Form,
   Input,
@@ -15,43 +15,54 @@ import {
 } from '@heroui/react'
 import { authClient } from '@/lib/auth-client'
 
-const SignInPage = () => {
+const SignInContent = () => {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
+
   const onSubmit = async e => {
     e.preventDefault()
+
     const formData = new FormData(e.currentTarget)
     const data = {}
+
     formData.forEach((value, key) => {
       data[key] = value.toString()
     })
 
-    const { data: signInData, error } = await authClient.signIn.email({
+    const { error } = await authClient.signIn.email({
       email: data.email,
       password: data.password,
       rememberMe: true,
-      callbackURL: '/'
+      callbackURL: callbackUrl
     })
   }
 
   const GsignIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: 'google'
+    const { error } = await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: callbackUrl
     })
   }
 
   const GHsignIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: 'github'
+    const { error } = await authClient.signIn.social({
+      provider: 'github',
+      callbackURL: callbackUrl
     })
   }
 
   return (
     <div className='min-h-screen bg-[#f3f6f3] flex flex-col items-center justify-center p-4'>
       <div className='flex flex-col items-center gap-1 text-center pb-6'>
-        <h1 className='text-2xl font-bold text-gray-900'>সাইন ইন</h1>
+        <h1 className='text-2xl font-bold text-gray-900'>
+          সাইন ইন
+        </h1>
+
         <p className='text-xs text-gray-500'>
           বিস্তারিত দাম, বাজার তুলনা ও প্রোফাইল দেখতে অ্যাকাউন্টে ঢুকুন।
         </p>
       </div>
+
       <Card className='w-full max-w-md p-6 bg-white shadow-sm border-none rounded-2xl'>
         <Form className='flex w-full flex-col gap-4' onSubmit={onSubmit}>
           <TextField
@@ -62,35 +73,56 @@ const SignInPage = () => {
               if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
                 return 'Please enter a valid email address'
               }
+
               return null
             }}
           >
-            <Label className='text-sm font-semibold text-gray-700'>ইমেইল</Label>
-            <Input placeholder='you@example.com' className='w-full' />
+            <Label className='text-sm font-semibold text-gray-700'>
+              ইমেইল
+            </Label>
+
+            <Input
+              name='email'
+              type='email'
+              placeholder='you@example.com'
+              className='w-full'
+            />
+
             <FieldError className='text-xs text-red-500 mt-1' />
           </TextField>
+
           <TextField
             isRequired
-            minLength={8}
             name='password'
             type='password'
+            minLength={8}
             validate={value => {
               if (value.length < 8) {
                 return 'Password must be at least 8 characters'
               }
+
               if (!/[A-Z]/.test(value)) {
                 return 'Password must contain at least one uppercase letter'
               }
+
               if (!/[0-9]/.test(value)) {
                 return 'Password must contain at least one number'
               }
+
               return null
             }}
           >
             <Label className='text-sm font-semibold text-gray-700'>
               পাসওয়ার্ড
             </Label>
-            <Input placeholder='কমপক্ষে ৮ অক্ষর' className='w-full' />
+
+            <Input
+              name='password'
+              type='password'
+              placeholder='কমপক্ষে ৮ অক্ষর'
+              className='w-full'
+            />
+
             <FieldError className='text-xs text-red-500 mt-1' />
           </TextField>
 
@@ -102,12 +134,15 @@ const SignInPage = () => {
               সাইন ইন
             </Button>
           </div>
+
           <div className='relative flex items-center justify-center my-2'>
             <div className='border-t border-gray-200 w-full'></div>
+
             <span className='bg-white px-3 text-xs text-gray-400 absolute'>
               অথবা
             </span>
           </div>
+
           <div className='grid grid-cols-2 gap-3'>
             <Button
               type='button'
@@ -129,8 +164,10 @@ const SignInPage = () => {
               GitHub দিয়ে চালিয়ে যান
             </Button>
           </div>
+
           <div className='text-center text-xs text-gray-500 mt-2'>
             অ্যাকাউন্ট নেই?{' '}
+
             <Link
               href='/sign-up'
               className='text-[#008a4b] font-semibold hover:underline'
@@ -140,10 +177,28 @@ const SignInPage = () => {
           </div>
         </Form>
       </Card>
-      <Link href='/' className='mt-6 text-xs text-gray-500 hover:text-gray-700'>
+
+      <Link
+        href='/'
+        className='mt-6 text-xs text-gray-500 hover:text-gray-700'
+      >
         ← হোম পেজে ফিরে যান
       </Link>
     </div>
+  )
+}
+
+const SignInPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className='min-h-screen flex items-center justify-center'>
+          লোড হচ্ছে...
+        </div>
+      }
+    >
+      <SignInContent />
+    </Suspense>
   )
 }
 
