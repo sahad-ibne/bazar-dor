@@ -18,8 +18,6 @@ const CategoryProductContent = async ({ params }) => {
     return (
         <div className="min-h-screen bg-[#f3f6f3] py-8">
             <div className="max-w-5xl mx-auto px-6 flex flex-col gap-6">
-                
-                {/* টপ ব্যানার কার্ড */}
                 <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-[#f0fdf4] text-2xl flex items-center justify-center">
                         {categoryIcon}
@@ -29,11 +27,7 @@ const CategoryProductContent = async ({ params }) => {
                         <p className="text-xs text-gray-500 mt-0.5">{totalProducts}টি পণ্যের আজকের দাম ও পরিবর্তন</p>
                     </div>
                 </div>
-
-                {/* সাব-হেডিং কাউন্ট */}
                 <p className="text-xs text-gray-500 font-medium">মোট {totalProducts}টি পণ্য দেখানো হচ্ছে</p>
-
-                {/* প্রোডাক্ট কার্ড গ্রিড */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {Array.isArray(categoryProducts) && categoryProducts.map((product) => {
                         const isUp = product?.change?.dir === 'up';

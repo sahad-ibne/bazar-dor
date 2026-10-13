@@ -40,7 +40,7 @@ export default function NavBar () {
   return (
     <nav className='sticky top-0 z-40 w-full border-b border-gray-200 bg-white shadow-sm'>
       <div className='mx-auto max-w-5xl px-6'>
-        <header className='flex h-20 items-center justify-between'>
+        <header className='flex h-16 items-center justify-between'>
           <div className='flex items-center gap-4'>
             <div className='flex items-center gap-3'>
               <Link href='/' className='flex items-center gap-3 text-decoration-none'>
@@ -110,20 +110,21 @@ export default function NavBar () {
           </div>
         </header>
 
-        <div className='flex items-center gap-6 pb-4 overflow-x-auto scrollbar-hide'>
+       <div className='flex items-center gap-4 pb-3 overflow-x-auto scrollbar-hide'>
           {categories.map(cat => {
-            const isActive = pathname === `/category/${cat?.slug}`
+            const categorySlug = cat.slug || cat.id;
+            const isActive = pathname === `/category/${categorySlug}`
             return (
               <Link 
                 key={cat.id} 
-                href={`/category/${cat?.slug}`} 
-                className={`flex items-center gap-2 text-sm whitespace-nowrap font-medium px-4 py-2 rounded-xl transition-colors ${
+                href={`/category/${categorySlug}`} 
+                className={`flex items-center gap-1.5 text-xs whitespace-nowrap font-medium px-3.5 py-1.5 rounded-xl transition-colors ${
                   isActive 
                     ? 'bg-[#008a4b] text-white shadow-sm' 
                     : 'text-gray-700 hover:text-[#008a4b] hover:bg-gray-50'
                 }`}
               >
-                <span className='text-base'>{cat.icon}</span>
+                <span className='text-sm'>{cat.icon}</span>
                 <span>{cat.nameBn}</span>
               </Link>
             )
