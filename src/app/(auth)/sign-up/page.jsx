@@ -1,7 +1,7 @@
 'use client'
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Button,
@@ -16,7 +16,45 @@ import {
 import { authClient } from '@/lib/auth-client'
 import Link from 'next/link'
 
-const SignUpPage = () => {
+const SignUpLoading = () => (
+  <div className="min-h-screen bg-[#f3f6f3] flex flex-col items-center justify-center p-4 animate-pulse">
+    <div className="flex flex-col items-center gap-2 text-center pb-6">
+      <div className="h-8 bg-gray-200 rounded-lg w-28" />
+      <div className="h-3.5 bg-gray-100 rounded-lg w-60" />
+    </div>
+    <div className="w-full max-w-md p-6 bg-white shadow-sm border border-gray-100 rounded-2xl space-y-4">
+      <div className="space-y-2">
+        <div className="h-3.5 bg-gray-200 rounded w-12" />
+        <div className="h-11 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-3.5 bg-gray-200 rounded w-12" />
+        <div className="h-11 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-3.5 bg-gray-200 rounded w-16" />
+        <div className="h-11 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="h-12 bg-gray-200 rounded-xl w-full mt-2" />
+      <div className="relative flex items-center justify-center my-2">
+        <div className="border-t border-gray-100 w-full" />
+        <div className="bg-white px-3 w-10 h-3 bg-gray-100 rounded absolute" />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="h-12 bg-gray-100 rounded-xl w-full" />
+        <div className="h-12 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="flex justify-center pt-2">
+        <div className="h-3.5 bg-gray-100 rounded w-36" />
+      </div>
+    </div>
+    <div className="mt-6">
+      <div className="h-3.5 bg-gray-200 rounded w-32" />
+    </div>
+  </div>
+);
+
+const SignUpContent = () => {
   const router = useRouter()
 
   const onSubmit = async e => {
@@ -175,11 +213,16 @@ const SignUpPage = () => {
           </div>
         </Form>
       </Card>
-      <Link href='/sign-in' className='mt-6 text-xs text-gray-500 hover:text-gray-700'>
+      <Link href='/' className='mt-6 text-xs text-gray-500 hover:text-gray-700'>
         ← হোম পেজে ফিরে যান
       </Link>
     </div>
   )
 }
-
-export default SignUpPage
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={<SignUpLoading />}>
+      <SignUpContent />
+    </Suspense>
+  )
+}

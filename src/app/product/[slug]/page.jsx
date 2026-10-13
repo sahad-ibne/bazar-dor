@@ -1,6 +1,7 @@
 import baseUrl from '@/bazar/baseUrl'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 
 const toBengaliNumber = num => {
   if (num === undefined || num === null) return ''
@@ -36,8 +37,62 @@ const getProductDetail = async slug => {
   }
   return null
 }
+const ProductDetailLoading = () => (
+  <div className="min-h-screen bg-[#f3f6f3] py-8">
+    <div className="max-w-4xl mx-auto px-6 flex flex-col gap-6 animate-pulse">
+      <div className="h-4 bg-gray-200 rounded w-48" />
+      <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-sm">
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gray-200 shrink-0" />
+          <div className="space-y-2.5 flex-1">
+            <div className="h-6 bg-gray-200 rounded-lg w-48" />
+            <div className="h-3.5 bg-gray-100 rounded-lg w-32" />
+            <div className="h-3 bg-gray-100 rounded-lg w-40" />
+          </div>
+        </div>
+        <div className="w-full sm:w-36 p-4 rounded-2xl bg-gray-50 border border-gray-100 flex flex-col items-center sm:items-end justify-center gap-1.5 shrink-0">
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-6 bg-gray-300 rounded w-20" />
+          <div className="h-3 bg-gray-200 rounded w-12" />
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm space-y-4">
+        <div className="h-4 bg-gray-200 rounded w-32" />
+        
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[1, 2, 3].map((item) => (
+            <div key={item} className="p-4 rounded-2xl bg-gray-50 border border-gray-100 space-y-2">
+              <div className="h-3 bg-gray-200 rounded w-20" />
+              <div className="h-5 bg-gray-300 rounded w-24" />
+              <div className="h-3 bg-gray-100 rounded w-28" />
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-100 shadow-sm space-y-4">
+        <div className="h-4 bg-gray-200 rounded w-40" />
+        <div className="grid grid-cols-5 gap-4 pb-3 border-b border-gray-100">
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-3 bg-gray-200 rounded w-12" />
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-3 bg-gray-200 rounded w-12" />
+        </div>
+        {[1, 2, 3, 4, 5].map((row) => (
+          <div key={row} className="grid grid-cols-5 gap-4 py-3 border-b border-gray-50 items-center">
+            <div className="h-4 bg-gray-200 rounded w-28" />
+            <div className="h-4 bg-gray-100 rounded w-12" />
+            <div className="h-4 bg-gray-100 rounded w-16" />
+            <div className="h-4 bg-gray-100 rounded w-16" />
+            <div className="h-4 bg-gray-200 rounded w-14" />
+          </div>
+        ))}
+      </div>
 
-export default async function ProductDetailPage ({ params }) {
+    </div>
+  </div>
+);
+ async function ProductDetailPage ({ params }) {
   const { slug } = await params
   const product = await getProductDetail(slug)
 
@@ -243,5 +298,12 @@ export default async function ProductDetailPage ({ params }) {
         </div>
       </div>
     </div>
+  )
+}
+export default function ProductPage({ params }) {
+  return (
+    <Suspense fallback={<ProductDetailLoading />}>
+      <ProductDetailPage params={params} />
+    </Suspense>
   )
 }

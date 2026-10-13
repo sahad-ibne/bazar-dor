@@ -15,6 +15,41 @@ import {
 } from '@heroui/react'
 import { authClient } from '@/lib/auth-client'
 
+const SignInLoading = () => (
+  <div className="min-h-screen bg-[#f3f6f3] flex flex-col items-center justify-center p-4 animate-pulse">
+    <div className="flex flex-col items-center gap-2 text-center pb-6">
+      <div className="h-8 bg-gray-200 rounded-lg w-28" />
+      <div className="h-3.5 bg-gray-100 rounded-lg w-64" />
+    </div>
+    <div className="w-full max-w-md p-6 bg-white shadow-sm border border-gray-100 rounded-2xl space-y-5">
+
+      <div className="space-y-2">
+        <div className="h-3.5 bg-gray-200 rounded w-12" />
+        <div className="h-11 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-3.5 bg-gray-200 rounded w-16" />
+        <div className="h-11 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="h-12 bg-gray-200 rounded-xl w-full mt-2" />
+      <div className="relative flex items-center justify-center my-2">
+        <div className="border-t border-gray-100 w-full" />
+        <div className="bg-white px-3 w-10 h-3 bg-gray-100 rounded absolute" />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="h-12 bg-gray-100 rounded-xl w-full" />
+        <div className="h-12 bg-gray-100 rounded-xl w-full" />
+      </div>
+      <div className="flex justify-center pt-2">
+        <div className="h-3.5 bg-gray-100 rounded w-36" />
+      </div>
+    </div>
+    <div className="mt-6">
+      <div className="h-3.5 bg-gray-200 rounded w-32" />
+    </div>
+  </div>
+);
+
 const SignInContent = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
@@ -187,19 +222,10 @@ const SignInContent = () => {
     </div>
   )
 }
-
-const SignInPage = () => {
+export default function SignInPage() {
   return (
-    <Suspense
-      fallback={
-        <div className='min-h-screen flex items-center justify-center'>
-          লোড হচ্ছে...
-        </div>
-      }
-    >
+    <Suspense fallback={<SignInLoading />}>
       <SignInContent />
     </Suspense>
   )
 }
-
-export default SignInPage

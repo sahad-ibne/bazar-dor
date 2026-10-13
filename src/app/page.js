@@ -11,13 +11,49 @@ const toBengaliNumber = (num) => {
     .toString()
     .replace(/\d/g, (x) => bengaliDigits[englishDigits.indexOf(x)]);
 };
+const HomeLoading = () => (
+  <div className="min-h-screen bg-[#f3f6f3] py-8">
+    <div className="max-w-5xl mx-auto px-6 flex flex-col gap-8 animate-pulse">
+      <div className="bg-white rounded-3xl p-8 border border-gray-100 h-64 flex items-center justify-between">
+        <div className="space-y-4 flex-1">
+          <div className="h-6 bg-gray-200 rounded-full w-36" />
+          <div className="h-8 bg-gray-200 rounded-xl w-3/4" />
+          <div className="h-4 bg-gray-100 rounded-lg w-1/2" />
+        </div>
+        <div className="w-72 h-48 bg-gray-200 rounded-2xl hidden md:block" />
+      </div>
+      <div className="space-y-4">
+        <div className="h-6 bg-gray-200 rounded w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map(item => (
+            <div key={item} className="bg-white p-5 rounded-2xl border border-gray-100 space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 bg-gray-200 rounded-xl shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 bg-gray-200 rounded w-24" />
+                  <div className="h-3 bg-gray-100 rounded w-16" />
+                </div>
+              </div>
+              <div className="border-t border-gray-100 pt-4 flex justify-between">
+                <div className="space-y-2">
+                  <div className="h-3 bg-gray-100 rounded w-16" />
+                  <div className="h-5 bg-gray-200 rounded w-24" />
+                </div>
+                <div className="h-4 bg-gray-100 rounded w-12" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
+    </div>
+  </div>
+);
 const getProducts = async () => {
   const res = await fetch(`${baseUrl}/products`, { cache: 'no-store' })
   return res.json()
 }
-
-export default async function HomeContent () {
+ async function HomeContent () {
   const products = await getProducts()
 
   const increasedProducts = Array.isArray(products)
@@ -233,5 +269,12 @@ export default async function HomeContent () {
         </div>
       </div>
     </div>
+  )
+}
+export default function HomePage() {
+  return (
+    <Suspense fallback={<HomeLoading />}>
+      <HomeContent />
+    </Suspense>
   )
 }
