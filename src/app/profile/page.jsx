@@ -7,8 +7,6 @@ import { useRouter } from 'next/navigation'
 const ProfilePage = () => {
   const router = useRouter()
   const { data: session, refetch } = authClient.useSession()
-  
-  // Input er jonno local state, jeta session theke initial value nibe
   const [name, setName] = useState(session?.user?.name || '')
 
   const handleSignOut = async () => {
@@ -26,13 +24,7 @@ const ProfilePage = () => {
     const { data, error } = await authClient.updateUser({
       name: name,
     })
-    
-    if (!error) {
-      refetch()
-    }
   }
-
-  // Display nam ba initial ber korar jonno
   const currentName = session?.user?.name || ''
   const userInitial = currentName ? currentName.charAt(0).toUpperCase() : 'U'
 
